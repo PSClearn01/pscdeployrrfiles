@@ -1,0 +1,6 @@
+http:
+  middlewares:
+    middlewares-cloudflare-realip:
+      plugin:
+        cloudflarewarp:
+          disableDefault: false

@@ -1,0 +1,18 @@
+http:
+  routers:
+    portainer-rtr:
+      rule: "Host(`portainer.{{env "DOMAINNAME_1"}}`)"
+      entryPoints:
+        - websecure-internal
+        - websecure-external
+      middlewares:
+        - chain-authentik
+      service: portainer-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    portainer-svc:
+      loadBalancer:
+        servers:
+          - url: "http://portainer:9000" # Or, "http://portainer:9000" if Portainer is part of t3_proxy network

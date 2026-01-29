@@ -1,0 +1,18 @@
+http:
+  routers:
+    it-tools-rtr:
+      rule: "Host(`it-tools.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: it-tools-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    it-tools-svc:
+      loadBalancer:
+        servers:
+          - url: "http://it-tools:8084" # http://IP-ADDRESS:PORT

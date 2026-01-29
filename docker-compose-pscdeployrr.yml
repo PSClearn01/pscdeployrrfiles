@@ -1,0 +1,107 @@
+########################### NETWORKS
+# You may customize the network subnets (192.168.x.0/24) below as you please.
+networks:
+  default:
+    driver: bridge
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: eth0 # using ifconfig
+    ipam:
+      config:
+        - subnet: "172.16.16.0/24"
+          ip_range: "172.16.16.225/32"
+          gateway: "172.16.16.1"
+  socket_proxy:
+    name: socket_proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.91.0/24
+  t3_proxy:
+    name: t3_proxy
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.90.0/24
+  t4_proxy:
+    name: t4_proxy
+    driver: bridge
+  # NETWORKS-PLACEHOLDER-DO-NOT-DELETE
+
+########################### SECRETS
+secrets:
+  basic_auth_credentials:
+    file: $DOCKERDIR/secrets/basic_auth_credentials
+  cf_dns_api_token:
+    file: $DOCKERDIR/secrets/cf_dns_api_token
+  postgres_default_password:
+    file: $DOCKERDIR/secrets/postgres_default_password
+  authentik_postgresql_user:
+    file: $DOCKERDIR/secrets/authentik_postgresql_user
+  authentik_postgresql_password:
+    file: $DOCKERDIR/secrets/authentik_postgresql_password
+  authentik_secret_key:
+    file: $DOCKERDIR/secrets/authentik_secret_key
+  mariadb_root_password:
+    file: $DOCKERDIR/secrets/mariadb_root_password
+  # SECRETS-PLACEHOLDER-DO-NOT-DELETE
+
+include:
+  ########################### SERVICES
+  # HOSTNAME defined in .env file
+
+  # - compose/$HOSTNAME/custom.yml
+
+  # CORE
+  - compose/$HOSTNAME/socket-proxy.yml
+  - compose/$HOSTNAME/traefik.yml
+  - compose/$HOSTNAME/portainer.yml
+  - compose/$HOSTNAME/dozzle.yml
+  - compose/$HOSTNAME/homepage.yml
+  - compose/$HOSTNAME/uptime-kuma.yml
+  - compose/$HOSTNAME/postgresql.yml
+  - compose/$HOSTNAME/authentik.yml
+  - compose/$HOSTNAME/authentik-worker.yml
+  # - compose/$HOSTNAME/crowdsec.yml
+  # - compose/$HOSTNAME/cloudflare-bouncer.yml
+  - compose/$HOSTNAME/mariadb.yml
+  - compose/$HOSTNAME/traefik-access-log.yml
+  - compose/$HOSTNAME/traefik-error-log.yml
+  - compose/$HOSTNAME/adguardhome.yml
+  - compose/$HOSTNAME/vscode.yml
+
+  # MEDIA
+  - compose/$HOSTNAME/notifiarr.yml
+  # - compose/$HOSTNAME/jellyfin.yml
+  # - compose/$HOSTNAME/radarr.yml
+  # - compose/$HOSTNAME/sonarr.yml
+  # - compose/$HOSTNAME/bazarr.yml
+
+  # APPS
+  # - compose/$HOSTNAME/sabnzbd.yml
+  - compose/$HOSTNAME/filebrowser.yml
+  - compose/$HOSTNAME/docker-gc.yml
+  - compose/$HOSTNAME/traefik-certs-dumper.yml
+  - compose/$HOSTNAME/grafana.yml
+  - compose/$HOSTNAME/it-tools.yml
+  - compose/$HOSTNAME/vaultwarden.yml
+  - compose/$HOSTNAME/dockwatch.yml
+  - compose/$HOSTNAME/filezilla.yml
+  # - compose/$HOSTNAME/wud.yml
+  # - compose/$HOSTNAME/dokuwiki.yml
+  # - compose/$HOSTNAME/deployrr-dashboard.yml
+  # - compose/$HOSTNAME/triliumnext.yml
+  # - compose/$HOSTNAME/qbittorrent.yml
+
+  # DBS
+  - compose/$HOSTNAME/influxdb.yml
+  - compose/$HOSTNAME/prometheus.yml
+
+  # MONITORING
+  - compose/$HOSTNAME/node-exporter.yml
+  - compose/$HOSTNAME/glances.yml
+  # - compose/$HOSTNAME/checkmk.yml
+
+  # SERVICE-PLACEHOLDER-DO-NOT-DELETE

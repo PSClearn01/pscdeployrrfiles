@@ -1,0 +1,29 @@
+services:
+  # Vaultwarden Password Manager
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    profiles: ["apps", "all"]
+    networks:
+      - default
+    ports:
+      - "$VAULTWARDEN_PORT:80"
+    environment:
+      # This is required to allow vaultwarden to verify the TLS certificate!
+      - DOMAIN=https://vaultwarden.$DOMAINNAME_1
+      - SSO_ENABLED=true
+      - SSO_AUTHORITY=https://authentik.purosurccd.com/application/o/vaultwarden/
+      - SSO_CLIENT_ID=LJ17LMB4UbBESxn3cCEUr7zgSGN5GxTNDxrrEb0N
+      - SSO_CLIENT_SECRET=mt7CYxeMmkO69TczI4t1SVzHyK1ZRPUnwESjn5QbQfQLBJUUAAZaB80mrani0WqZGtzYdyroSKmZP0DMsxEpquEMO4u2JYgFTXmyTcEacYrlsYjDvcOnsQlVU86BJQuV
+      - SSO_SCOPES="openid email profile offline_access"
+      - SSO_ALLOW_UNKNOWN_EMAIL_VERIFICATION=false
+      - SSO_CLIENT_CACHE_EXPIRATION=0
+      - SSO_ONLY=false # Set to true to disable email+master password login and require SSO
+      - SSO_SIGNUPS_MATCH_EMAIL=true # Match first SSO login to existing account by email
+      # - ADMIN_TOKEN=ADMIN-TOKEN-PLACEHOLDER
+    volumes:
+      - $DOCKERDIR/appdata/vaultwarden/data:/data
+    # DOCKER-LABELS-PLACEHOLDER

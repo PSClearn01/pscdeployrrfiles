@@ -1,0 +1,18 @@
+http:
+  routers:
+    filebrowser-rtr:
+      rule: "Host(`filebrowser.{{env "DOMAINNAME_1"}}`)"
+      entryPoints:
+        - websecure-internal
+        - websecure-external
+      middlewares:
+        - chain-basic-auth
+      service: filebrowser-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    filebrowser-svc:
+      loadBalancer:
+        servers:
+          - url: "http://filebrowser:8082" # Or, "http://filebrowser:8082" if filebrowser is part of t3_proxy network

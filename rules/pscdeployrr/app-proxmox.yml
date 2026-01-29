@@ -1,0 +1,18 @@
+http:
+  routers:
+    proxmox-rtr:
+      rule: "Host(`pmx-1.{{env "DOMAINNAME_1"}}`)"
+      entryPoints:
+        - websecure-internal
+        - websecure-external
+      middlewares:
+        - chain-no-auth
+      service: proxmox-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    proxmox-svc:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.0.2:8006"

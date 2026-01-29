@@ -1,0 +1,18 @@
+http:
+  routers:
+    grafana-rtr:
+      rule: "Host(`grafana.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: grafana-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    grafana-svc:
+      loadBalancer:
+        servers:
+          - url: "http://grafana:3002" # http://IP-ADDRESS:PORT

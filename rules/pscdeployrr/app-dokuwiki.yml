@@ -1,0 +1,18 @@
+http:
+  routers:
+    dokuwiki-rtr:
+      rule: "Host(`dokuwiki.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: dokuwiki-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    dokuwiki-svc:
+      loadBalancer:
+        servers:
+          - url: "http://dokuwiki:8089" # http://IP-ADDRESS:PORT

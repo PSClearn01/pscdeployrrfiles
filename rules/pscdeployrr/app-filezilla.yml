@@ -1,0 +1,18 @@
+http:
+  routers:
+    filezilla-rtr:
+      rule: "Host(`filezilla.{{env "DOMAINNAME_1"}}`)"
+      entryPoints:
+        - websecure-external
+        - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: filezilla-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    filezilla-svc:
+      loadBalancer:
+        servers:
+          - url: "http://filezilla:3003" # http://IP-ADDRESS:PORT

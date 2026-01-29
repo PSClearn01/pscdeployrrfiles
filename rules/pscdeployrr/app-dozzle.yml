@@ -1,0 +1,18 @@
+http:
+  routers:
+    dozzle-rtr:
+      rule: "Host(`dozzle.{{env "DOMAINNAME_1"}}`)"
+      entryPoints:
+        - websecure-internal
+        - websecure-external
+      middlewares:
+        - chain-basic-auth
+      service: dozzle-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    dozzle-svc:
+      loadBalancer:
+        servers:
+          - url: "http://172.16.16.3:8081" # Or, "http://portainer:9000" if Portainer is part of t3_proxy network

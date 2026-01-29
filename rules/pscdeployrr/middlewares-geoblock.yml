@@ -1,0 +1,20 @@
+http:
+  middlewares:
+    middlewares-geoblock:
+      plugin:
+        geoblock:
+          enabled: true
+          databaseFilePath: /plugins-local/IP2LOCATION-LITE-DB1.IPV6.BIN
+          allowedCountries:
+            - US
+            - CA
+            - GB
+            - DE
+          blockedCountries: []
+          defaultAllow: false
+          allowPrivate: true
+          disallowedStatusCode: 403
+          allowedIPBlocks:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16

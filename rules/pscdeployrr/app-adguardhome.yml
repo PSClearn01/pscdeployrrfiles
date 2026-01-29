@@ -1,0 +1,18 @@
+http:
+  routers:
+    adguardhome-rtr:
+      rule: "Host(`adguardhome.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        - websecure-external
+        - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: adguardhome-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    adguardhome-svc:
+      loadBalancer:
+        servers:
+          - url: "http://adguardhome:8087" # http://IP-ADDRESS:PORT

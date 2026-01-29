@@ -1,0 +1,18 @@
+http:
+  routers:
+    vaultwarden-rtr:
+      rule: "Host(`vaultwarden.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: vaultwarden-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    vaultwarden-svc:
+      loadBalancer:
+        servers:
+          - url: "http://vaultwarden:8088" # http://IP-ADDRESS:PORT

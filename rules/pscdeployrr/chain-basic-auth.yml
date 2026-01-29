@@ -1,0 +1,10 @@
+http:
+  middlewares:
+    chain-basic-auth:
+      chain:
+        middlewares:
+          # - middlewares-cloudflare-realip
+          # - middlewares-geoblock
+          - middlewares-rate-limit
+          - middlewares-secure-headers
+          - middlewares-basic-auth

@@ -1,0 +1,18 @@
+http:
+  routers:
+    vscode-rtr:
+      rule: "Host(`vscode.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: vscode-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    vscode-svc:
+      loadBalancer:
+        servers:
+          - url: "http://vscode:8443" # http://IP-ADDRESS:PORT

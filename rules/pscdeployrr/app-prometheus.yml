@@ -1,0 +1,18 @@
+http:
+  routers:
+    prometheus-rtr:
+      rule: "Host(`prometheus.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: prometheus-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    prometheus-svc:
+      loadBalancer:
+        servers:
+          - url: "http://prometheus:9090" # http://IP-ADDRESS:PORT

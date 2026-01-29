@@ -1,0 +1,18 @@
+http:
+  routers:
+    uptime-kuma-rtr:
+      rule: "Host(`uptime-kuma.{{env "DOMAINNAME_1"}}`)"
+      entryPoints:
+        - websecure-internal
+        - websecure-external
+      middlewares:
+        - chain-basic-auth
+      service: uptime-kuma-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    uptime-kuma-svc:
+      loadBalancer:
+        servers:
+          - url: "http://uptime-kuma:3001" # Or, "http://uptime-kuma:3001" if uptime-kuma is part of t3_proxy network

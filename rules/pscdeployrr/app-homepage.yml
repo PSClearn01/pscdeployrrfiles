@@ -1,0 +1,18 @@
+http:
+  routers:
+    homepage-rtr:
+      rule: "Host(`{{env "DOMAINNAME_1"}}`) || Host(`www.{{env "DOMAINNAME_1"}}`)"
+      entryPoints:
+        - websecure-internal
+        - websecure-external
+      middlewares:
+        - chain-basic-auth
+      service: homepage-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    homepage-svc:
+      loadBalancer:
+        servers:
+          - url: "http://homepage:3000" # Or, "http://homepage:3000" if Homepage is part of t3_proxy network

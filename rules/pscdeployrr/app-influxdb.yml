@@ -1,0 +1,18 @@
+http:
+  routers:
+    influxdb-rtr:
+      rule: "Host(`influxdb.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: influxdb-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    influxdb-svc:
+      loadBalancer:
+        servers:
+          - url: "http://influxdb:8086" # http://IP-ADDRESS:PORT

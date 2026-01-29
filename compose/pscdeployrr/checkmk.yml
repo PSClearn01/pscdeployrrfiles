@@ -1,0 +1,37 @@
+services:
+  # Checkmk - Monitoring System
+  checkmk:
+    image: "checkmk/check-mk-raw:2.4.0-latest"
+    container_name: "checkmk"
+    restart: unless-stopped
+    profiles: ["monitoring", "all"]
+    networks:
+      - default
+      - t3_proxy
+    ports:
+      - "8000:8000"
+      - "$CHECKMK_PORT:5000"
+      - "162:162/udp"  # SNMP Trap port
+    environment:
+      - TZ=America/Pacific
+      - CMK_PASSWORD=0vMYQm1b4uHPtHZrAMFgul5rSRHmIuz
+      - CMK_SITE_ID=cmk  
+    volumes:
+      - $DOCKERDIR/appdata/checkmk/monitoring:/omd/sites:rw
+    tmpfs:
+      - /opt/omd/sites/cmk/tmp:uid=1000,gid=1000
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=t3_proxy
+      - traefik.http.services.checkmk-web.loadBalancer.server.port=5000
+      - traefik.http.services.checkmk-web.loadBalancer.server.scheme=http
+      - traefik.http.routers.checkmk-http.service=checkmk-web
+      - traefik.http.routers.checkmk-http.rule=Host(`checkmk.purosurccd.com`)
+      - traefik.http.routers.checkmk-http.entrypoints=web-internal,web-external
+      - traefik.http.routers.checkmk-http.middlewares=chain-no-auth@file
+      - traefik.http.routers.checkmk-https.service=checkmk-web
+      - traefik.http.routers.checkmk-https.rule=Host(`checkmk.purosurccd.com`)
+      - traefik.http.routers.checkmk-https.entrypoints=websecure-internal,websecure-external
+      - traefik.http.routers.checkmk-https.middlewares=chain-no-auth@file
+      - traefik.http.routers.checkmk-https.tls=true
+      - traefik.http.routers.checkmk-https.tls.certresolver=cloudflare

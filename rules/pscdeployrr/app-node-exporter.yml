@@ -1,0 +1,18 @@
+http:
+  routers:
+    node-exporter-rtr:
+      rule: "Host(`node-exporter.{{env "DOMAINNAME_1"}}`)" 
+      entryPoints:
+        # - websecure-external
+        # - websecure-internal
+      middlewares:
+        - chain-no-auth
+      service: node-exporter-svc
+      tls:
+        certResolver: dns-cloudflare
+        options: tls-opts@file
+  services:
+    node-exporter-svc:
+      loadBalancer:
+        servers:
+          - url: "http://node-exporter:9100" # http://IP-ADDRESS:PORT
